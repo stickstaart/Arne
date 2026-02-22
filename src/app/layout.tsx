@@ -1,8 +1,9 @@
 import './globals.css'
-import Header from '@/components/header'
-import Footer from '@/components/footer'
+import Header from '@/components/Header'
+import Footer from '@/components/Footer'
 
 export const metadata = {
+  metadataBase: new URL('https://vercel.com/stickstaartdev/arne'), // Replace with your actual domain
   title: {
     default: "Arne van der Ree | Illustrator & Visualizer",
     template: "%s | Arne van der Ree"

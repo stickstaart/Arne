@@ -1,4 +1,4 @@
-import Container from '../layout/container'
+import Container from '../layout/Container'
 
 export default function Hero() {
   return (
