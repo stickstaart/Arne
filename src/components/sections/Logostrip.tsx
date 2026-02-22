@@ -44,7 +44,8 @@ export default function Logostrip() {
                   width={160}
                   height={80}
                   alt="Partner Logo"
-                  className="object-contain" // Geen 'grayscale' meer voor full color!
+                  className="opacity-50 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-300 object-contain"
+                  style={{ height: 'auto', width: 'auto' }}
                 />
               </div>
             ))}

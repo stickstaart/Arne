@@ -30,3 +30,27 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@layer base {
+    body {
+        background-color: #F9F7F2; /* Het warme canvas */
+        color: #1A1A1B;
+        /* Subtiele korrel-textuur over de hele site */
+        background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
+    }
+
+    h1, h2, h3 {
+        font-family: 'Playfair Display', serif; /* Zorg dat je dit font importeert via Google Fonts */
+        letter-spacing: -0.02em;
+    }
+}
+
+/* Maak de afbeeldingen in het grid iets zachter */
+.cld-image {
+    filter: grayscale(10%) contrast(95%);
+    transition: filter 0.5s ease;
+}
+
+.cld-image:hover {
+    filter: grayscale(0%) contrast(100%);
+}

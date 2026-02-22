@@ -24,18 +24,20 @@ export default function Portfoliogrid() {
       }
     }
     fetchImages()
-  }, [category])
+  }, []) // We houden de useEffect leeg om alles in één keer te laden
 
   return (
     <section className="py-24 px-6 max-w-7xl mx-auto" id="portfolio">
-      {/* Filter Navigatie */}
+      {/* Filter Navigatie - Kleuren aangepast naar het nieuwe thema */}
       <div className="flex justify-center space-x-8 mb-16">
         {CATEGORIES.map((cat) => (
           <button
             key={cat}
             onClick={() => setCategory(cat)}
             className={`text-sm uppercase tracking-[0.2em] font-medium transition-all ${
-              category === cat ? 'text-blue-600 border-b-2 border-blue-600' : 'text-slate-400 hover:text-slate-900'
+              category === cat
+                ? 'text-stone-900 border-b-2 border-stone-900'
+                : 'text-stone-400 hover:text-stone-900'
             }`}
           >
             {cat}
@@ -43,31 +45,37 @@ export default function Portfoliogrid() {
         ))}
       </div>
 
-      {/* Het Grid */}
+      {/* De Masonry Container */}
       <motion.div
         layout
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+        className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6"
       >
         <AnimatePresence mode="popLayout">
           {images.map((img) => (
             <motion.div
               key={img.publicId}
               layout
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.4 }}
-              className="group relative aspect-[4/5] overflow-hidden bg-slate-100 rounded-xl"
+              className="break-inside-avoid mb-6 group relative overflow-hidden bg-stone-200 rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-500"
             >
               <CldImage
                 src={img.publicId}
-                fill
+                width={img.width || 800}
+                height={img.height || 1000}
                 alt={img.title || "Portfolio item"}
-                className="object-cover transition-transform duration-700 group-hover:scale-110"
+                className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105"
+                style={{ height: 'auto' }} // Vertelt Next.js dat de hoogte variabel is
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               />
-              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-8">
-                <p className="text-white font-medium">{img.title || "Untitled"}</p>
+
+              {/* Overlay */}
+              <div className="absolute inset-0 bg-black/20 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end p-6">
+                <p className="text-white font-medium transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 font-serif italic text-lg">
+                  {img.title || "Untitled"}
+                </p>
               </div>
             </motion.div>
           ))}
