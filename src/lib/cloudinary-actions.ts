@@ -8,26 +8,33 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 })
 
-export async function getImagesFromFolder(folderPath: string = '') {
+// Haalt afbeeldingen op basis van de tag (bijv. 'logo')
+export async function getImagesByTag(tagName: string) {
   try {
-    // We negeren folderPath en halen gewoon ALLES op uit je account
-    const results = await cloudinary.api.resources({
-      type: 'upload',
+    const results = await cloudinary.api.resources_by_tag(tagName, {
       max_results: 100,
-    })
-    console.log("CLOUD_DEBUG: Totaal aantal afbeeldingen in account:", results.resources.length)
+      context: true, // Zorgt dat we metadata zoals captions meekrijgen
+    });
+
+    console.log(`Cloudinary: ${results.resources.length} items gevonden met tag '${tagName}'`);
+
     return results.resources.map((resource: any) => ({
       publicId: resource.public_id,
       width: resource.width,
       height: resource.height,
-    }))
+      title: resource.context?.custom?.caption || resource.public_id.split('/').pop()?.split('_')[0] || 'Werk',
+    }));
   } catch (error) {
-    console.error('Cloudinary Error:', error)
-    return []
+    console.error(`Fout bij ophalen tag ${tagName}:`, error);
+    return [];
   }
 }
 
-export async function getPortfolioImages(category: string) {
-  // Voor nu laten we deze even ALLES ophalen zodat je in ieder geval beeld ziet
-  return getImagesFromFolder()
+// Deze functies roepen nu de algemene tag-functie aan
+export async function getImagesFromFolder() {
+  return getImagesByTag('logo');
+}
+
+export async function getPortfolioImages() {
+  return getImagesByTag('portfolio-item');
 }
