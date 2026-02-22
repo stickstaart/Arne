@@ -1,0 +1,263 @@
+diff --git a/src/app/page.tsx b/src/app/page.tsx
+index 0be8487..b5b7c8f 100644
+--- a/src/app/page.tsx
++++ b/src/app/page.tsx
+@@ -1,12 +1,13 @@
+ import Hero from '@/components/sections/Hero'
++import LogoStrip from '@/components/sections/LogoStrip'
++import PortfolioGrid from '@/components/sections/PortfolioGrid'
+
+ export default function Home() {
+   return (
+-    <>
++    <main>
+       <Hero />
+-      {/* Straks: <LogoCarousel /> */}
+-      {/* Straks: <PortfolioGrid /> */}
+-      {/* Straks: <ContactSection /> */}
+-    </>
++      <LogoStrip />
++      <PortfolioGrid />
++    </main>
+   )
+ }
+diff --git a/src/components/sections/LogoStrip.tsx b/src/components/sections/LogoStrip.tsx
+index e69de29..c701fdd 100644
+--- a/src/components/sections/LogoStrip.tsx
++++ b/src/components/sections/LogoStrip.tsx
+@@ -0,0 +1,57 @@
++'use client'
++
++import { useState, useEffect } from 'react'
++import { getImagesFromFolder } from '@/lib/cloudinary-actions'
++import { CldImage } from 'next-cloudinary'
++
++export default function LogoStrip() {
++  const [logos, setLogos] = useState<any[]>([])
++
++  useEffect(() => {
++    async function fetchLogos() {
++      const allImages = await getImagesFromFolder('')
++      const filtered = allImages.filter((img: any) =>
++        img.publicId.toLowerCase().includes('logo') ||
++        img.publicId.toLowerCase().includes('pica')
++      )
++      setLogos(filtered)
++    }
++    fetchLogos()
++  }, [])
++
++  if (logos.length === 0) return null
++
++  // We dupliceren de logos om een naadloze loop te creëren
++  const duplicatedLogos = [...logos, ...logos, ...logos]
++
++  return (
++    <section className="py-16 bg-white border-y border-slate-100 overflow-hidden">
++      <div className="relative max-w-7xl mx-auto px-6">
++
++        {/* De Fade maskers aan de zijkanten */}
++        <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
++        <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
++
++        {/* De Carrousel Container */}
++        <div className="flex overflow-hidden group">
++          <div className="flex space-x-16 animate-marquee whitespace-nowrap py-4">
++            {duplicatedLogos.map((logo, index) => (
++              <div
++                key={`${logo.publicId}-${index}`}
++                className="flex-shrink-0 flex items-center justify-center w-40 h-20 transition-transform duration-300 hover:scale-110"
++              >
++                <CldImage
++                  src={logo.publicId}
++                  width={160}
++                  height={80}
++                  alt="Partner Logo"
++                  className="object-contain" // Geen 'grayscale' meer voor full color!
++                />
++              </div>
++            ))}
++          </div>
++        </div>
++      </div>
++    </section>
++  )
++}
+diff --git a/src/components/sections/PortfolioGrid.tsx b/src/components/sections/PortfolioGrid.tsx
+index e69de29..1b0be11 100644
+--- a/src/components/sections/PortfolioGrid.tsx
++++ b/src/components/sections/PortfolioGrid.tsx
+@@ -0,0 +1,72 @@
++'use client'
++
++import { useState, useEffect } from 'react'
++import { motion, AnimatePresence } from 'framer-motion'
++import { CldImage } from 'next-cloudinary'
++import { getPortfolioImages } from '@/lib/cloudinary-actions'
++
++export default function PortfolioGrid() {
++  const [category, setCategory] = useState<'doodle' | 'wildkunst'>('doodle')
++  const [images, setImages] = useState<any[]>([])
++  const [loading, setLoading] = useState(true)
++
++  useEffect(() => {
++    const fetchImages = async () => {
++      setLoading(true)
++      const data = await getPortfolioImages(category)
++      setImages(data)
++      setLoading(false)
++    }
++    fetchImages()
++  }, [category])
++
++  return (
++    <section className="py-24 px-6 max-w-7xl mx-auto" id="portfolio">
++      {/* Filter Navigatie */}
++      <div className="flex justify-center space-x-8 mb-16">
++        {['doodle', 'wildkunst'].map((cat) => (
++          <button
++            key={cat}
++            onClick={() => setCategory(cat as any)}
++            className={`text-sm uppercase tracking-[0.2em] font-medium transition-all ${
++              category === cat ? 'text-blue-600 border-b-2 border-blue-600' : 'text-slate-400 hover:text-slate-900'
++            }`}
++          >
++            {cat}
++          </button>
++        ))}
++      </div>
++
++      {/* Het Grid */}
++      <motion.div
++        layout
++        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
++      >
++        <AnimatePresence mode="popLayout">
++          {images.map((img) => (
++            <motion.div
++              key={img.publicId}
++              layout
++              initial={{ opacity: 0, scale: 0.9 }}
++              animate={{ opacity: 1, scale: 1 }}
++              exit={{ opacity: 0, scale: 0.9 }}
++              transition={{ duration: 0.4 }}
++              className="group relative aspect-[4/5] overflow-hidden bg-slate-100 rounded-xl"
++            >
++              <CldImage
++                src={img.publicId}
++                fill
++                alt={img.title}
++                className="object-cover transition-transform duration-700 group-hover:scale-110"
++                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
++              />
++              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-8">
++                <p className="text-white font-medium">{img.title}</p>
++              </div>
++            </motion.div>
++          ))}
++        </AnimatePresence>
++      </motion.div>
++    </section>
++  )
++}
+diff --git a/src/data/projects.ts b/src/data/projects.ts
+index e69de29..9bbaca9 100644
+--- a/src/data/projects.ts
++++ b/src/data/projects.ts
+@@ -0,0 +1,12 @@
++import { Project } from '@/types';
++
++export const projects: Project[] = [
++  {
++    id: '1',
++    title: 'Philips Workshop',
++    category: 'doodle',
++    cloudinaryId: 'arne-portfolio/projects/doodle/philips_01',
++    description: 'Live visualisatie tijdens een innovatie-sessie.'
++  },
++  // Voeg hier later meer toe
++];
+diff --git a/src/lib/cloudinary-actions.ts b/src/lib/cloudinary-actions.ts
+index e69de29..098b42f 100644
+--- a/src/lib/cloudinary-actions.ts
++++ b/src/lib/cloudinary-actions.ts
+@@ -0,0 +1,53 @@
++'use server'
++
++import { v2 as cloudinary } from 'cloudinary';
++
++cloudinary.config({
++  cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
++  api_key: process.env.CLOUDINARY_API_KEY,
++  api_secret: process.env.CLOUDINARY_API_SECRET,
++  secure: true,
++});
++
++// Functie voor de LogoStrip
++export async function getImagesFromFolder(folderPath: string = '') {
++  try {
++    const results = await cloudinary.api.resources({
++      type: 'upload',
++      prefix: folderPath,
++      max_results: 50,
++    });
++    return results.resources.map((resource: any) => ({
++      publicId: resource.public_id,
++      width: resource.width,
++      height: resource.height,
++    }));
++  } catch (error) {
++    console.error('CLOUDINARY ERROR:', error);
++    return [];
++  }
++}
++
++// Functie voor het PortfolioGrid (DIT WAS DE ONTBREKENDE SCHAKEL)
++export async function getPortfolioImages(category: string) {
++  try {
++    // We zoeken in de root naar bestanden die de categorie in hun naam hebben
++    // OF we zoeken in de specifieke map als je ze daar alsnog heen verplaatst
++    const results = await cloudinary.api.resources({
++      type: 'upload',
++      prefix: `arne-portfolio/projects/${category}`, // Pas dit aan als ze in de root staan naar gewoon category
++      max_results: 50,
++      context: true,
++    });
++
++    return results.resources.map((resource: any) => ({
++      publicId: resource.public_id,
++      width: resource.width,
++      height: resource.height,
++      title: resource.context?.custom?.caption || 'Portfolio werk',
++    }));
++  } catch (error) {
++    console.error('Portfolio fetch error:', error);
++    return [];
++  }
++}
+diff --git a/src/types/index.ts b/src/types/index.ts
+index e69de29..1746f61 100644
+--- a/src/types/index.ts
++++ b/src/types/index.ts
+@@ -0,0 +1,14 @@
++export interface Project {
++  id: string;
++  title: string;
++  category: 'doodle' | 'wildkunst';
++  cloudinaryId: string;
++  description: string;
++}
++
++export interface ProjectPreview {
++  id: string;
++  title: string;
++  category: 'doodle' | 'wildkunst';
++  cloudinaryId: string;
++}
+diff --git a/tailwind.config.ts b/tailwind.config.ts
+index e69de29..5d02a8f 100644
+--- a/tailwind.config.ts
++++ b/tailwind.config.ts
+@@ -0,0 +1,2 @@
++animation: {
++  'marquee': 'marquee 30s linear infinite'
