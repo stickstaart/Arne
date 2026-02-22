@@ -8,13 +8,14 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 })
 
-export async function getImagesFromFolder(folderPath: string = 'arne-portfolio/logos') {
+export async function getImagesFromFolder(folderPath: string = '') {
   try {
+    // We negeren folderPath en halen gewoon ALLES op uit je account
     const results = await cloudinary.api.resources({
       type: 'upload',
-      prefix: folderPath,
       max_results: 100,
     })
+    console.log("CLOUD_DEBUG: Totaal aantal afbeeldingen in account:", results.resources.length)
     return results.resources.map((resource: any) => ({
       publicId: resource.public_id,
       width: resource.width,
@@ -27,20 +28,6 @@ export async function getImagesFromFolder(folderPath: string = 'arne-portfolio/l
 }
 
 export async function getPortfolioImages(category: string) {
-  try {
-    const results = await cloudinary.api.resources({
-      type: 'upload',
-      prefix: `arne-portfolio/projects/${category}`,
-      max_results: 50,
-    })
-    return results.resources.map((resource: any) => ({
-      publicId: resource.public_id,
-      width: resource.width,
-      height: resource.height,
-      title: resource.public_id.split('/').pop()?.split('_')[0] || 'Werk',
-    }))
-  } catch (error) {
-    console.error('Portfolio Error:', error)
-    return []
-  }
+  // Voor nu laten we deze even ALLES ophalen zodat je in ieder geval beeld ziet
+  return getImagesFromFolder()
 }
