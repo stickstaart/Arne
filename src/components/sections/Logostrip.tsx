@@ -4,17 +4,35 @@ import { useState, useEffect } from 'react'
 import { getLogoResources } from '@/lib/cloudinary-actions'
 import { CldImage } from 'next-cloudinary'
 import { CloudinaryResource } from '@/types'
+import { getImagesFromFolder } from '@/lib/cloudinary-actions'
 
 export default function Logostrip() {
   const [logos, setLogos] = useState<CloudinaryResource[]>([])
 
+// src/components/sections/LogoStrip.tsx
+
   useEffect(() => {
     async function fetchLogos() {
-      const resources = await getLogoResources()
-      setLogos(resources)
+      try {
+        // 1. Eerst de variabele aanmaken (deze regel miste waarschijnlijk of stond lager)
+        const allImages = await getImagesFromFolder('arne-portfolio/logos'); // Of de juiste mapnaam
+
+        console.log("DEBUG: Alle gevonden afbeeldingen:", allImages);
+
+        // 2. Nu pas kun je allImages gebruiken om te filteren
+        const filtered = allImages.filter((img: any) => {
+          const id = img.publicId.toLowerCase();
+          // Alleen doorlaten als de naam 'logo', 'pica' of 'client' bevat
+          return id.includes('logo') || id.includes('pica') || id.includes('client');
+        });
+
+        setLogos(filtered);
+      } catch (error) {
+        console.error("Fout bij ophalen logo's:", error);
+      }
     }
-    fetchLogos()
-  }, [])
+    fetchLogos();
+  }, []);
 
   if (logos.length === 0) return null
 

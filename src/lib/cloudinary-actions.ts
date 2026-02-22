@@ -1,59 +1,55 @@
 'use server'
 
-import { v2 as cloudinary } from 'cloudinary';
-import { CloudinaryResource } from '@/types';
+import { v2 as cloudinary } from 'cloudinary'
 
-const CLOUDINARY_CONFIG = {
+cloudinary.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
-  secure: true,
-};
+})
 
-cloudinary.config(CLOUDINARY_CONFIG);
-
-const DEFAULT_FOLDER = 'arne-portfolio';
-
-/**
- * Fetch all resources from a specific Cloudinary folder.
- */
-export async function getResourcesFromFolder(folderPath: string = ''): Promise<CloudinaryResource[]> {
+// 1. Functie voor de LogoStrip
+export async function getImagesFromFolder(folderPath: string = 'arne-portfolio/logos') {
   try {
     const results = await cloudinary.api.resources({
       type: 'upload',
       prefix: folderPath,
-      max_results: 50,
-      context: true,
-    });
+      max_results: 100,
+    })
 
     return results.resources.map((resource: any) => ({
       publicId: resource.public_id,
       width: resource.width,
       height: resource.height,
-      title: resource.context?.custom?.caption || 'Portfolio werk',
-    }));
+    }))
   } catch (error) {
-    console.error(`CLOUDINARY ERROR (folder: ${folderPath}):`, error);
-    return [];
+    console.error('Cloudinary Logo Error:', error)
+    return []
   }
 }
 
-/**
- * Specifically fetch portfolio images for a given category.
- */
-export async function getPortfolioImages(category: string): Promise<CloudinaryResource[]> {
-  const folder = `${DEFAULT_FOLDER}/projects/${category}`;
-  return getResourcesFromFolder(folder);
-}
+// 2. Functie voor het PortfolioGrid
+export async function getPortfolioImages(category: string) {
+  try {
+    // Gebruik het pad dat Junie vond
+    const results = await cloudinary.api.resources({
+      type: 'upload',
+      prefix: `arne-portfolio/projects/${category}`,
+      max_results: 50,
+      context: true,
+    })
 
-/**
- * Fetch logos for the Logostrip.
- */
-export async function getLogoResources(): Promise<CloudinaryResource[]> {
-  // Assuming logos are in a specific folder or have a naming convention
-  const allImages = await getResourcesFromFolder(DEFAULT_FOLDER);
-  return allImages.filter((img) =>
-    img.publicId.toLowerCase().includes('logo') ||
-    img.publicId.toLowerCase().includes('pica')
-  );
+    console.log(`DEBUG: Gevonden in ${category}:`, results.resources.length)
+
+    return results.resources.map((resource: any) => ({
+      publicId: resource.public_id,
+      width: resource.width,
+      height: resource.height,
+      // Haal de titel uit de bestandsnaam (vóór de underscore)
+      title: resource.context?.custom?.caption || resource.public_id.split('/').pop()?.split('_')[0] || 'Portfolio werk',
+    }))
+  } catch (error) {
+    console.error('Cloudinary Portfolio Error:', error)
+    return []
+  }
 }
