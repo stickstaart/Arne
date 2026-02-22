@@ -1,6 +1,8 @@
-export default function Container({ children, className = "" }: { children: React.ReactNode, className?: string }) {
+"use client"
+
+export default function Container({ children }: { children: React.ReactNode }) {
   return (
-    <div className={`mx-auto max-w-7xl px-5 sm:px-8 md:px-12 ${className}`}>
+    <div className="mx-auto max-w-7xl px-6 lg:px-8">
       {children}
     </div>
   )

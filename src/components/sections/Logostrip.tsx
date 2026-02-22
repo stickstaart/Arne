@@ -41,11 +41,11 @@ export default function Logostrip() {
               >
                 <CldImage
                   src={logo.publicId}
-                  width={160}
-                  height={80}
-                  alt="Partner Logo"
-                  className="opacity-50 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-300 object-contain"
-                  style={{ height: 'auto', width: 'auto' }}
+                  width={384} // Wat Cloudinary aanvraagt
+                  height={150} // Schatting van de hoogte
+                  alt="Partner logo"
+                  style={{ width: 'auto', height: 'auto' }} // DIT STOPT DE WARNINGS
+                  className="..."
                 />
               </div>
             ))}
