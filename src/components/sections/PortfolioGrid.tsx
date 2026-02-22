@@ -17,7 +17,7 @@ export default function Portfoliogrid() {
     const fetchImages = async () => {
       setLoading(true)
       try {
-        const data = await getPortfolioImages(category)
+        const data = await getPortfolioImages()
         setImages(data)
       } finally {
         setLoading(false)
