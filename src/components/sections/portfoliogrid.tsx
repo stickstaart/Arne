@@ -8,7 +8,7 @@ import { Category, CloudinaryResource } from '@/types'
 
 const CATEGORIES: Category[] = ['doodle', 'wildkunst'];
 
-export default function PortfolioGrid() {
+export default function Portfoliogrid() {
   const [category, setCategory] = useState<Category>('doodle')
   const [images, setImages] = useState<CloudinaryResource[]>([])
   const [loading, setLoading] = useState(true)
@@ -62,12 +62,12 @@ export default function PortfolioGrid() {
               <CldImage
                 src={img.publicId}
                 fill
-                alt={img.title}
+                alt={img.title || "Portfolio item"}
                 className="object-cover transition-transform duration-700 group-hover:scale-110"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               />
               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-8">
-                <p className="text-white font-medium">{img.title}</p>
+                <p className="text-white font-medium">{img.title || "Untitled"}</p>
               </div>
             </motion.div>
           ))}

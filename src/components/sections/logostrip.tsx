@@ -5,7 +5,7 @@ import { getLogoResources } from '@/lib/cloudinary-actions'
 import { CldImage } from 'next-cloudinary'
 import { CloudinaryResource } from '@/types'
 
-export default function LogoStrip() {
+export default function Logostrip() {
   const [logos, setLogos] = useState<CloudinaryResource[]>([])
 
   useEffect(() => {

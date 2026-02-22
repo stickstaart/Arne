@@ -1,13 +1,13 @@
-import Hero from '@/components/sections/Hero'
-import LogoStrip from '@/components/sections/LogoStrip'
-import PortfolioGrid from '@/components/sections/PortfolioGrid'
+import Hero from '@/components/sections/hero'
+import Logostrip from '@/components/sections/logostrip'
+import Portfoliogrid from '@/components/sections/portfoliogrid'
 
 export default function Home() {
   return (
     <main>
       <Hero />
-      <LogoStrip />
-      <PortfolioGrid />
+      <Logostrip />
+      <Portfoliogrid />
     </main>
   )
 }

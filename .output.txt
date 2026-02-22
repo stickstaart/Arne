@@ -4,8 +4,8 @@ index 0be8487..b5b7c8f 100644
 +++ b/src/app/page.tsx
 @@ -1,12 +1,13 @@
  import Hero from '@/components/sections/Hero'
-+import LogoStrip from '@/components/sections/LogoStrip'
-+import PortfolioGrid from '@/components/sections/PortfolioGrid'
++import Logostrip from '@/components/sections/Logostrip'
++import Portfoliogrid from '@/components/sections/Portfoliogrid'
 
  export default function Home() {
    return (
@@ -13,18 +13,18 @@ index 0be8487..b5b7c8f 100644
 +    <main>
        <Hero />
 -      {/* Straks: <LogoCarousel /> */}
--      {/* Straks: <PortfolioGrid /> */}
+-      {/* Straks: <Portfoliogrid /> */}
 -      {/* Straks: <ContactSection /> */}
 -    </>
-+      <LogoStrip />
-+      <PortfolioGrid />
++      <Logostrip />
++      <Portfoliogrid />
 +    </main>
    )
  }
-diff --git a/src/components/sections/LogoStrip.tsx b/src/components/sections/LogoStrip.tsx
+diff --git a/src/components/sections/logostrip.tsx b/src/components/sections/logostrip.tsx
 index e69de29..c701fdd 100644
---- a/src/components/sections/LogoStrip.tsx
-+++ b/src/components/sections/LogoStrip.tsx
+--- a/src/components/sections/logostrip.tsx
++++ b/src/components/sections/Logostrip.tsx
 @@ -0,0 +1,57 @@
 +'use client'
 +
@@ -32,7 +32,7 @@ index e69de29..c701fdd 100644
 +import { getImagesFromFolder } from '@/lib/cloudinary-actions'
 +import { CldImage } from 'next-cloudinary'
 +
-+export default function LogoStrip() {
++export default function Logostrip() {
 +  const [logos, setLogos] = useState<any[]>([])
 +
 +  useEffect(() => {
@@ -83,10 +83,10 @@ index e69de29..c701fdd 100644
 +    </section>
 +  )
 +}
-diff --git a/src/components/sections/PortfolioGrid.tsx b/src/components/sections/PortfolioGrid.tsx
+diff --git a/src/components/sections/Portfoliogrid.tsx b/src/components/sections/Portfoliogrid.tsx
 index e69de29..1b0be11 100644
---- a/src/components/sections/PortfolioGrid.tsx
-+++ b/src/components/sections/PortfolioGrid.tsx
+--- a/src/components/sections/portfoliogrid.tsx
++++ b/src/components/sections/portfoliogrid.tsx
 @@ -0,0 +1,72 @@
 +'use client'
 +
@@ -95,7 +95,7 @@ index e69de29..1b0be11 100644
 +import { CldImage } from 'next-cloudinary'
 +import { getPortfolioImages } from '@/lib/cloudinary-actions'
 +
-+export default function PortfolioGrid() {
++export default function Portfoliogrid() {
 +  const [category, setCategory] = useState<'doodle' | 'wildkunst'>('doodle')
 +  const [images, setImages] = useState<any[]>([])
 +  const [loading, setLoading] = useState(true)
@@ -193,7 +193,7 @@ index e69de29..098b42f 100644
 +  secure: true,
 +});
 +
-+// Functie voor de LogoStrip
++// Functie voor de Logostrip
 +export async function getImagesFromFolder(folderPath: string = '') {
 +  try {
 +    const results = await cloudinary.api.resources({
@@ -212,7 +212,7 @@ index e69de29..098b42f 100644
 +  }
 +}
 +
-+// Functie voor het PortfolioGrid (DIT WAS DE ONTBREKENDE SCHAKEL)
++// Functie voor het Portfoliogrid (DIT WAS DE ONTBREKENDE SCHAKEL)
 +export async function getPortfolioImages(category: string) {
 +  try {
 +    // We zoeken in de root naar bestanden die de categorie in hun naam hebben

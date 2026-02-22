@@ -47,7 +47,7 @@ export async function getPortfolioImages(category: string): Promise<CloudinaryRe
 }
 
 /**
- * Fetch logos for the LogoStrip.
+ * Fetch logos for the Logostrip.
  */
 export async function getLogoResources(): Promise<CloudinaryResource[]> {
   // Assuming logos are in a specific folder or have a naming convention
