@@ -11,7 +11,7 @@ export default function Logostrip() {
   useEffect(() => {
     async function fetchLogos() {
       // Gebruik het pad dat we eerder hebben vastgesteld
-      const data = await getImagesFromFolder('arne-portfolio/logos')
+      const data = await getImagesFromFolder()
       console.log("Gevonden logo data:", data)
       setLogos(data)
     }
