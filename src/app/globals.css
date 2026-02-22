@@ -7,6 +7,8 @@
 
 @theme {
   --animate-marquee: marquee 80s linear infinite;
+  --font-playfair: var(--font-playfair);
+  --font-inter: var(--font-inter);
 
   @keyframes marquee {
     from {
@@ -37,10 +39,11 @@ body {
         color: #1A1A1B;
         /* Subtiele korrel-textuur over de hele site */
         background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
+        font-family: var(--font-inter), sans-serif;
     }
 
     h1, h2, h3 {
-        font-family: 'Playfair Display', serif; /* Zorg dat je dit font importeert via Google Fonts */
+        font-family: var(--font-playfair), serif;
         letter-spacing: -0.02em;
     }
 }

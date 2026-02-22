@@ -67,7 +67,6 @@ export default function Portfoliogrid() {
                 height={img.height || 1000}
                 alt={img.title || "Portfolio item"}
                 className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105"
-                style={{ height: 'auto' }} // Vertelt Next.js dat de hoogte variabel is
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               />
 

@@ -14,7 +14,7 @@ export default function Hero() {
             <div className="relative aspect-[4/5] rounded-2xl overflow-hidden shadow-xl bg-stone-200">
               {/* Vervang 'arne_foto' door de juiste ID uit je Cloudinary dashboard */}
               <CldImage
-                src="https://res.cloudinary.com/dghm9cmuh/image/upload/v1771718873/arne-van-der-ree-met-het-werk-van-rien-poortvliet_gphaba.jpg"
+                src="arne-van-der-ree-met-het-werk-van-rien-poortvliet_gphaba"
                 width={800}
                 height={1000}
                 alt="Arne van der Ree"

@@ -10,10 +10,16 @@ export default function Logostrip() {
 
   useEffect(() => {
     async function fetchLogos() {
-      // Gebruik het pad dat we eerder hebben vastgesteld
-      const data = await getImagesFromFolder()
-      console.log("Gevonden logo data:", data)
-      setLogos(data)
+      try {
+        // Gebruik het pad dat we eerder hebben vastgesteld
+        const data = await getImagesFromFolder()
+        console.log("Gevonden logo data:", data)
+        if (Array.isArray(data)) {
+          setLogos(data)
+        }
+      } catch (error) {
+        console.error("Fout bij het ophalen van logos:", error)
+      }
     }
     fetchLogos()
   }, [])
@@ -44,8 +50,7 @@ export default function Logostrip() {
                   width={384} // Wat Cloudinary aanvraagt
                   height={150} // Schatting van de hoogte
                   alt="Partner logo"
-                  style={{ width: 'auto', height: 'auto' }} // DIT STOPT DE WARNINGS
-                  className="..."
+                  className="w-auto h-auto"
                 />
               </div>
             ))}

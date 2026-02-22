@@ -15,12 +15,11 @@ export default function Header() {
         <div className="flex items-center space-x-4">
           <div className="w-12 h-12 relative rounded-lg overflow-hidden bg-white border border-stone-200 shadow-sm">
             <CldImage
-              src="https://res.cloudinary.com/dghm9cmuh/image/upload/v1771797689/doodle-logo-site_t2pq17.png" // Zorg dat deze ID klopt in Cloudinary
+              src="doodle-logo-site_t2pq17" // Alleen de public_id, geen volledige URL
               width={80}
               height={80}
               alt="Doodle Logo"
-              className="object-contain p-1"
-              style={{ height: 'auto', width: 'auto' }}
+              className="object-contain p-1 w-auto h-auto"
             />
           </div>
           <div className="flex flex-col">

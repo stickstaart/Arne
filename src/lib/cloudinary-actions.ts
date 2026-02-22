@@ -31,7 +31,7 @@ export async function getImagesByTag(tagName: string) {
 }
 
 // Deze functies roepen nu de algemene tag-functie aan
-export async function getImagesFromFolder() {
+export async function getImagesFromFolder()  {
   return getImagesByTag('logo');
 }
 
