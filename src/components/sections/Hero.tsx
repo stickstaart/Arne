@@ -5,30 +5,27 @@ import Container from '../layout/Container'
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden pt-32 pb-16 md:pt-48 md:pb-32 bg-[#F9F7F2]">
+    <section className="relative min-h-[80vh] flex items-center overflow-hidden pt-32 pb-16 md:pt-48 md:pb-32 bg-[#F9F7F2]">
+
+      {/* 1. ACHTERGROND LAAG - Nu beperkt tot de rechterkant op desktop */}
+      <div className="absolute inset-y-0 right-0 w-full md:w-1/3 lg:w-[35%] z-0">
+        <CldImage
+          fill // Gebruik fill voor absolute positionering binnen de parent div
+          src="arne-van-der-ree-met-het-werk-van-rien-poortvliet_gphaba"
+          alt="Arne van der Ree"
+          className="object-cover object-center"
+          priority
+        />
+
+        {/* De Snelle Fade: van de beige kleur (links) naar transparant (over de foto) */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#F9F7F2] via-[#F9F7F2]/40 to-transparent" />
+      </div>
+
+      {/* 2. CONTENT LAAG */}
       <Container>
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
 
-          {/* Foto van Arne */}
-          <div className="lg:col-span-5 relative">
-            <div className="relative aspect-[4/5] rounded-2xl overflow-hidden shadow-xl bg-stone-200">
-              {/* Vervang 'arne_foto' door de juiste ID uit je Cloudinary dashboard */}
-              <CldImage
-                src="arne-van-der-ree-met-het-werk-van-rien-poortvliet_gphaba"
-                width={800}
-                height={1000}
-                alt="Arne van der Ree"
-                className="object-cover"
-                priority
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#F9F7F2]/40 to-transparent" />
-            </div>
-            <p className="mt-4 text-[10px] text-stone-400 uppercase tracking-widest text-center lg:text-left">
-              Alle afbeeldingen zijn auteursrechtelijk beschermd © Arne van der Ree
-            </p>
-          </div>
-
-          {/* Tekst Content */}
+          {/* Tekst aan de linkerkant */}
           <div className="lg:col-span-7">
             <h1 className="text-5xl md:text-7xl font-serif italic leading-tight text-stone-900">
               Welkom op Doodle.nl
@@ -36,24 +33,24 @@ export default function Hero() {
             <h2 className="text-2xl md:text-3xl text-stone-500 font-sans font-light mt-2">
               Voor illustratie en Educatief Design
             </h2>
-            <p className="mt-8 text-lg text-stone-600 leading-relaxed max-w-xl">
-              Arne van der Ree startte Doodle.nl in 2001 na een bevlogen start van zijn commerciële illustratiewerk op jonge leeftijd.
-            </p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4">
               <a
                 href="#portfolio"
-                className="inline-flex items-center justify-center h-14 px-8 bg-stone-900 text-white rounded-full font-medium hover:scale-105 transition-all"
+                className="inline-flex items-center justify-center h-14 px-8 bg-stone-900 text-white rounded-full font-medium hover:scale-105 transition-all shadow-lg"
               >
                 Bekijk Portfolio
               </a>
               <a
                 href="#over-arne"
-                className="inline-flex items-center justify-center h-14 px-8 border border-stone-300 rounded-full font-medium hover:bg-stone-100 transition-all"
+                className="inline-flex items-center justify-center h-14 px-8 bg-stone-900 text-white rounded-full font-medium hover:scale-105 transition-all shadow-lg"
               >
                 Over Arne
               </a>
             </div>
           </div>
+
+          {/* Rechterkant leeg laten voor de foto op de achtergrond */}
+          <div className="hidden lg:block lg:col-span-5" />
         </div>
       </Container>
     </section>
