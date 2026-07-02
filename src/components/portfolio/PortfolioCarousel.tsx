@@ -60,7 +60,7 @@ export default function PortfolioCarousel() {
     const render = () => {
       // Alleen automatisch scrollen als hij niet gepauzeerd is en de gebruiker hem NIET vasthoudt
       if (!isPausedRef.current && !isDownPCRef.current && container) {
-        currentScrollLeft += 2.0
+        currentScrollLeft += 1
 
         if (currentScrollLeft >= container.scrollWidth / 2) {
           currentScrollLeft = 0
