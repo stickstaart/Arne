@@ -9,7 +9,7 @@ export default function Home() {
     <main className="pt-24 md:pt-32 bg-[#F9F7F2] min-h-screen">
       <PortfolioCarousel/>
       {/* Het nieuwe interactieve portfolio */}
-      <PortfolioGrid />
+      {/*<PortfolioGrid />*/}
       {/* Over Arne (Zonder foto, puur tekst/elegant) */}
       {/* Contact sectie */}
       {/* Logostrip / Opdrachtgevers carrousel (Komt nu helemaal onderaan) */}
