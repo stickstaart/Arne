@@ -364,7 +364,14 @@ export default function PortfolioCarousel() {
 
       {/* 3. LIGHTBOX MODAL MET DRAG, PINCH-ZOOM EN +, - KNOPPEN */}
       {selectedImage && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center overflow-hidden select-none">
+        <div
+          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center overflow-hidden select-none cursor-pointer"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setSelectedImage(null)
+            }
+          }}
+        >
           <TransformWrapper
             initialScale={1}
             minScale={1}
@@ -375,7 +382,10 @@ export default function PortfolioCarousel() {
             {({ zoomIn, zoomOut, resetTransform }) => (
               <>
                 {/* ACTIEBALK RECHTSBOVEN (+, -, Reset, Sluiten) */}
-                <div className="absolute top-4 right-4 md:top-6 md:right-6 flex items-center gap-2 md:gap-3 z-50">
+                <div
+                  className="absolute top-4 right-4 md:top-6 md:right-6 flex items-center gap-2 md:gap-3 z-50 cursor-default"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <button
                     onClick={() => zoomIn()}
                     className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center backdrop-blur-md border border-white/20 text-lg transition-all active:scale-95"
@@ -405,25 +415,36 @@ export default function PortfolioCarousel() {
                   </button>
                 </div>
 
-                {/* AFBEELDING CONTAINER MET CORRECTE BOUNDS */}
-                <div className="w-screen h-screen flex items-center justify-center p-4 md:p-12">
+                {/* AFBEELDING CONTAINER */}
+                <div
+                  className="w-screen h-screen flex items-center justify-center p-4 md:p-12 cursor-pointer"
+                  onClick={(e) => {
+                    if (e.target === e.currentTarget) {
+                      setSelectedImage(null)
+                    }
+                  }}
+                >
                   <TransformComponent
-                    wrapperStyle={{ width: "100%", height: "100%" }}
+                    wrapperStyle={{ width: "100%", height: "100%", pointerEvents: "none" }}
                     contentStyle={{
                       width: "100%",
                       height: "100%",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
+                      pointerEvents: "none",
                     }}
                   >
-                    <div className="relative max-w-full max-h-full flex items-center justify-center">
+                    <div
+                      className="relative max-w-full max-h-full flex items-center justify-center pointer-events-auto cursor-grab active:cursor-grabbing"
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       <CldImage
                         src={selectedImage.publicId}
                         width={selectedImage.width || 2400}
                         height={selectedImage.height || 2400}
                         alt={selectedImage.title || "Arne van der Ree Vergroot"}
-                        className="max-w-[90vw] max-h-[80vh] w-auto h-auto object-contain rounded-sm shadow-2xl pointer-events-auto cursor-grab active:cursor-grabbing"
+                        className="max-w-[90vw] max-h-[80vh] w-auto h-auto object-contain rounded-sm shadow-2xl"
                         priority
                       />
                     </div>
