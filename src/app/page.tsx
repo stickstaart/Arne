@@ -7,7 +7,7 @@ import PortfolioCarousel from '@/components/portfolio/PortfolioCarousel'
 export default function Home() {
   return (
     <main className="pt-24 md:pt-32 bg-[#F9F7F2] min-h-screen">
-      <PortfolioCarousel/>
+      <PortfolioCarousel />
       {/* Het nieuwe interactieve portfolio */}
       {/*<PortfolioGrid />*/}
       {/* Over Arne (Zonder foto, puur tekst/elegant) */}

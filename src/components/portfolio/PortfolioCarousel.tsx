@@ -4,11 +4,13 @@ import { useState, useRef, useEffect } from 'react'
 import { CldImage } from 'next-cloudinary'
 import { getPortfolioImages } from '@/lib/cloudinary-actions'
 import { CloudinaryResource } from '@/types'
+import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch'
 
 export default function PortfolioCarousel() {
   const [images, setImages] = useState<CloudinaryResource[]>([])
   const [loading, setLoading] = useState(true)
   const [activeIndex, setActiveIndex] = useState<number>(0)
+  const [selectedImage, setSelectedImage] = useState<CloudinaryResource | null>(null)
 
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const thumbContainerRef = useRef<HTMLDivElement>(null)
@@ -30,7 +32,6 @@ export default function PortfolioCarousel() {
   const velXPCRef = useRef(0)
   const momentumIdPCRef = useRef<number | null>(null)
 
-  // 1. Haal live Cloudinary beelden op
   useEffect(() => {
     const fetchImages = async () => {
       setLoading(true)
@@ -48,7 +49,7 @@ export default function PortfolioCarousel() {
 
   const marqueeImages = [...images, ...images]
 
-  // 2. Grote carrousel (PC) automatische loop
+  // Grote carrousel (PC) automatische loop
   useEffect(() => {
     if (loading || images.length === 0) return
 
@@ -58,7 +59,6 @@ export default function PortfolioCarousel() {
     let currentScrollLeft = container.scrollLeft
 
     const render = () => {
-      // Alleen automatisch scrollen als hij niet gepauzeerd is en de gebruiker hem NIET vasthoudt
       if (!isPausedRef.current && !isDownPCRef.current && container) {
         currentScrollLeft += 1
 
@@ -80,7 +80,7 @@ export default function PortfolioCarousel() {
     }
   }, [loading, images])
 
-  // 3. Klik op miniatuur (Centreren)
+  // Klik op miniatuur
   const handleThumbClick = (index: number) => {
     setActiveIndex(index)
     isPausedRef.current = true
@@ -108,7 +108,6 @@ export default function PortfolioCarousel() {
     resetAutoScrollTimer()
   }
 
-  // Timer om na handmatige acties na 3 seconden weer te gaan scrollen
   const resetAutoScrollTimer = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current)
     timeoutRef.current = setTimeout(() => {
@@ -116,7 +115,7 @@ export default function PortfolioCarousel() {
     }, 3000)
   }
 
-  // 4. Momentum voor Miniaturen (MC)
+  // Momentum voor Miniaturen
   const beginMCMomentumLoop = (container: HTMLDivElement) => {
     cancelMCMomentum()
     const loop = () => {
@@ -140,28 +139,22 @@ export default function PortfolioCarousel() {
     if (momentumIdMCRef.current) cancelAnimationFrame(momentumIdMCRef.current)
   }
 
-// 5. Momentum voor Grote Carrousel (PC) met vloeiende overgang naar auto-scroll
+  // Momentum voor Grote Carrousel
   const beginPCMomentumLoop = (container: HTMLDivElement) => {
     cancelPCMomentum()
     const loop = () => {
       container.scrollLeft += velXPCRef.current
-      velXPCRef.current *= 0.95 // Wrijving remt de zwiep af
+      velXPCRef.current *= 0.95
 
-      // Oneindige loop check tijdens het uitrollen
       if (container.scrollLeft >= container.scrollWidth / 2) {
         container.scrollLeft -= container.scrollWidth / 2
       } else if (container.scrollLeft <= 0) {
         container.scrollLeft += container.scrollWidth / 2
       }
 
-      // De "Vloeiende Overloop" Logica:
-      // Als de zwiep-snelheid is afgeremd tot onder de 2.2, haken we de auto-scroll er weer in.
-      // We checken Math.abs voor het geval er naar rechts (negatieve velocity) gesleept is.
       if (Math.abs(velXPCRef.current) > 2.2) {
         momentumIdPCRef.current = requestAnimationFrame(loop)
       } else {
-        // Zodra de snelheden matchen, zetten we isPausedRef weer op false.
-        // De carrousel pakt de beweging vanaf deze exacte snelheid en positie direct weer op!
         isPausedRef.current = false
       }
     }
@@ -202,15 +195,15 @@ export default function PortfolioCarousel() {
         }
       `}</style>
 
-      {/* 1. GROTE CARROUSEL (PC - Nu mét Drag & Momentum!) */}
+      {/* 1. GROTE CARROUSEL */}
       <div className="relative w-full min-h-[50vh] flex items-center overflow-hidden bg-transparent">
         <div
           ref={scrollContainerRef}
-          className="flex w-max overflow-x-auto bg-transparent remove-scrollbar cursor-grab active:cursor-grabbing"
+          className="flex w-max items-center overflow-x-auto bg-transparent remove-scrollbar cursor-grab active:cursor-grabbing"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           onMouseDown={(e) => {
             isDownPCRef.current = true
-            isPausedRef.current = true // Stop de automatische loop direct
+            isPausedRef.current = true
             cancelPCMomentum()
             const container = e.currentTarget
             container.classList.remove('scroll-smooth')
@@ -239,7 +232,6 @@ export default function PortfolioCarousel() {
             container.scrollLeft = scrollLeftPCRef.current - walk
             velXPCRef.current = container.scrollLeft - prevScrollLeft
 
-            // Oneindige drag reset
             if (container.scrollLeft >= container.scrollWidth / 2) {
               container.scrollLeft -= container.scrollWidth / 2
               scrollLeftPCRef.current -= container.scrollWidth / 2
@@ -258,24 +250,28 @@ export default function PortfolioCarousel() {
           }}
         >
           {marqueeImages.map((img, index) => {
-            const isPortrait = (img.width || 1) < (img.height || 1)
-            const widthClass = isPortrait
-              ? "w-full landscape:w-1/2 sm:w-1/2 md:w-1/3 lg:w-1/4"
-              : "w-full landscape:w-full sm:w-full md:w-2/3 lg:w-1/2"
-
             return (
               <div
                 key={`marquee-${img.publicId}-${index}`}
-                className={`${widthClass} shrink-0 px-3 md:px-6 py-4 flex justify-center bg-transparent`}
+                className="shrink-0 px-3 md:px-6 py-4 flex justify-center items-center bg-transparent"
+                style={{ height: '60vh' }}
               >
-                <div className="relative w-full aspect-[4/5] md:aspect-[16/9] max-h-[70vh] rounded-xl overflow-hidden bg-stone-100/30 shadow-md">
+                <div
+                  onClick={() => {
+                    if (Math.abs(velXPCRef.current) < 2) {
+                      setSelectedImage(img)
+                    }
+                  }}
+                  className="relative h-full w-auto max-w-[85vw] md:max-w-[70vw] rounded-xl overflow-hidden bg-stone-100/30 shadow-md transition-transform duration-300 hover:scale-[1.01] cursor-pointer"
+                >
                   <CldImage
                     src={img.publicId}
-                    fill
+                    width={img.width || 1200}
+                    height={img.height || 1200}
                     alt={img.title || "Arne van der Ree Kunstwerk"}
-                    className="object-cover pointer-events-none"
+                    className="h-full w-auto object-contain pointer-events-none"
                     priority={index === 0}
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    sizes="(max-width: 768px) 85vw, 60vw"
                   />
                 </div>
               </div>
@@ -284,7 +280,7 @@ export default function PortfolioCarousel() {
         </div>
       </div>
 
-      {/* 2. ONEINDIGE THUMBNAIL NAVIGATOR (MC) */}
+      {/* 2. MINIATUUR NAVIGATOR */}
       <div className="mt-6 px-4 bg-transparent">
         <div
           ref={thumbContainerRef}
@@ -365,6 +361,79 @@ export default function PortfolioCarousel() {
           })}
         </div>
       </div>
+
+      {/* 3. LIGHTBOX MODAL MET DRAG, PINCH-ZOOM EN +, - KNOPPEN */}
+      {selectedImage && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center overflow-hidden select-none">
+          <TransformWrapper
+            initialScale={1}
+            minScale={1}
+            maxScale={4}
+            centerOnInit
+            limitToBounds={true}
+          >
+            {({ zoomIn, zoomOut, resetTransform }) => (
+              <>
+                {/* ACTIEBALK RECHTSBOVEN (+, -, Reset, Sluiten) */}
+                <div className="absolute top-4 right-4 md:top-6 md:right-6 flex items-center gap-2 md:gap-3 z-50">
+                  <button
+                    onClick={() => zoomIn()}
+                    className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center backdrop-blur-md border border-white/20 text-lg transition-all active:scale-95"
+                    aria-label="Inzoomen"
+                  >
+                    +
+                  </button>
+                  <button
+                    onClick={() => zoomOut()}
+                    className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center backdrop-blur-md border border-white/20 text-lg transition-all active:scale-95"
+                    aria-label="Uitzoomen"
+                  >
+                    &minus;
+                  </button>
+                  <button
+                    onClick={() => resetTransform()}
+                    className="px-3 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center backdrop-blur-md border border-white/20 text-xs uppercase tracking-wider transition-all active:scale-95"
+                  >
+                    Reset
+                  </button>
+                  <button
+                    onClick={() => setSelectedImage(null)}
+                    className="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center text-2xl font-light transition-all active:scale-95 ml-2"
+                    aria-label="Sluiten"
+                  >
+                    &times;
+                  </button>
+                </div>
+
+                {/* AFBEELDING CONTAINER MET CORRECTE BOUNDS */}
+                <div className="w-screen h-screen flex items-center justify-center p-4 md:p-12">
+                  <TransformComponent
+                    wrapperStyle={{ width: "100%", height: "100%" }}
+                    contentStyle={{
+                      width: "100%",
+                      height: "100%",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <div className="relative max-w-full max-h-full flex items-center justify-center">
+                      <CldImage
+                        src={selectedImage.publicId}
+                        width={selectedImage.width || 2400}
+                        height={selectedImage.height || 2400}
+                        alt={selectedImage.title || "Arne van der Ree Vergroot"}
+                        className="max-w-[90vw] max-h-[80vh] w-auto h-auto object-contain rounded-sm shadow-2xl pointer-events-auto cursor-grab active:cursor-grabbing"
+                        priority
+                      />
+                    </div>
+                  </TransformComponent>
+                </div>
+              </>
+            )}
+          </TransformWrapper>
+        </div>
+      )}
 
     </div>
   )
