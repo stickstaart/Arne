@@ -187,7 +187,7 @@ export default function PortfolioCarousel() {
   if (images.length === 0) return null
 
   return (
-    <div className="w-full bg-transparent py-4 overflow-hidden select-none">
+    <div id="portfolio" className="w-full bg-transparent py-4 overflow-hidden select-none scroll-mt-24">
 
       <style>{`
         .remove-scrollbar::-webkit-scrollbar {
