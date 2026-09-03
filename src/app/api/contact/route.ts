@@ -12,7 +12,7 @@ export async function POST(request: Request) {
     // 2. Verstuur de e-mail
     const data = await resend.emails.send({
       from: 'Doodle <onboarding@resend.dev>', // Of je eigen domein
-      to: ['jouw@email.nl'],
+      to: ['stickstaart@gmail.com'],
       subject: `Nieuw bericht van ${name}`,
       replyTo: email,
       text: message,
