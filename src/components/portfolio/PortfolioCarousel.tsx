@@ -326,6 +326,7 @@ export default function PortfolioCarousel() {
         >
           {marqueeImages.map((img, index) => {
             const realIndex = index % images.length
+            const isActive = activeIndex === realIndex && isPausedRef.current
 
             return (
               <button
@@ -344,17 +345,17 @@ export default function PortfolioCarousel() {
                     }, 500)
                   }
                 }}
-                className={`relative h-16 w-16 md:h-20 md:w-20 shrink-0 rounded-md overflow-hidden bg-stone-200/50 transition-all ${
-                  activeIndex === realIndex && isPausedRef.current
-                    ? 'ring-2 ring-stone-900 opacity-100 scale-95'
-                    : 'opacity-50 hover:opacity-80'
+                className={`relative h-16 w-16 md:h-20 md:w-20 shrink-0 rounded-lg overflow-hidden transition-all duration-300 ease-out cursor-pointer ${
+                  isActive
+                    ? 'ring-2 ring-stone-900 ring-offset-2 opacity-100 scale-105 z-10 shadow-md'
+                    : 'opacity-85 hover:opacity-100 hover:scale-105 hover:z-10'
                 }`}
               >
                 <CldImage
                   src={img.publicId}
                   fill
                   alt={`Miniatuur ${realIndex + 1}`}
-                  className="object-cover pointer-events-none"
+                  className="object-cover pointer-events-none transition-transform duration-300 hover:scale-105"
                 />
               </button>
             )

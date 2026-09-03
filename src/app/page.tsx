@@ -3,6 +3,7 @@ import Logostrip from '@/components/sections/Logostrip'
 import PortfolioGrid from '@/components/sections/PortfolioGrid'
 import About from '@/components/sections/About'
 import PortfolioCarousel from '@/components/portfolio/PortfolioCarousel'
+import InfoContact from '@/components/sections/InfoContact'
 
 export default function Home() {
   return (
@@ -11,9 +12,8 @@ export default function Home() {
       {/* Het nieuwe interactieve portfolio */}
       {/*<PortfolioGrid />*/}
       {/* Over Arne (Zonder foto, puur tekst/elegant) */}
-      {/* Contact sectie */}
-      {/* Logostrip / Opdrachtgevers carrousel (Komt nu helemaal onderaan) */}
-      <Logostrip />
+      <InfoContact /> {/* Contact sectie */ }
+      <Logostrip /> { /* OPDRACHTGEVERS */ }
     </main>
   )
 }
