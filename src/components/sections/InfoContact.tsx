@@ -81,7 +81,7 @@ export default function InfoContact() {
   }
 
   return (
-    <section id="contact" className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+    <section id="infocontact" className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
 
         {/* LINKERKOLOM: Logo Doodle & Infotekst */}
