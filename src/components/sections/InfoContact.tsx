@@ -87,8 +87,8 @@ export default function InfoContact() {
         {/* LINKERKOLOM: Logo Doodle & Infotekst */}
         <div className="lg:col-span-5 space-y-6">
           <div className="flex flex-col border-b border-stone-200/80 pb-4 inline-block">
-            <h2 className="text-3xl font-sans uppercase tracking-[0.3em] text-stone-900 leading-none">
-              Doodle.nl
+            <h2 className="text-2xl font-light font-sans uppercase tracking-[0.3em] text-stone-900 leading-none">
+              Info & Contact
             </h2>
             <span className="text-[10px] uppercase tracking-[0.3em] text-stone-500 mt-2 font-sans font-medium">
               Arne van der Ree
@@ -100,7 +100,9 @@ export default function InfoContact() {
               <strong className="text-stone-900 font-semibold">Doodle.nl</strong> is de éénkoppige illustratiestudio van Arne van der Ree. Met meer dan 30 jaar professionele ervaring in commerciële illustratie en educatief design zijn uw opdrachten in goede handen.
             </p>
             <p>
-              Stuur gerust uw vragen over de mogelijkheden via nevenstaand formulier.
+              Stuur gerust uw vragen over de mogelijkheden via {' '}
+              <span className="hidden lg:inline">nevenstaand</span>
+              <span className="inline lg:hidden">onderstaand</span> formulier.
             </p>
           </div>
         </div>

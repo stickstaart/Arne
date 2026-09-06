@@ -32,7 +32,7 @@ export default function Header() {
             />
           </div>
           <div className="flex flex-col">
-            <span className="text-3xl font-sans uppercase tracking-[0.3em] text-stone-900 leading-none">Doodle.nl</span>
+            <span className="text-2xl font-sans font-light uppercase tracking-[0.3em] text-stone-900 leading-none">Doodle.nl</span>
             <span className="text-[10px] uppercase tracking-[0.3em] text-stone-500 mt-1.5">Arne van der Ree</span>
           </div>
         </div>
@@ -71,9 +71,9 @@ export default function Header() {
 
       {/* Mobile Menu Overlay */}
       <div className={`md:hidden absolute top-24 left-0 w-full bg-[#F9F7F2] border-b border-stone-200 transition-all duration-300 ease-in-out overflow-hidden ${isOpen ? 'max-h-64 opacity-100 shadow-xl' : 'max-h-0 opacity-0'}`}>
-        <div className="py-8 px-6 flex flex-col space-y-6 text-center text-lg font-serif italic text-stone-800">
-          <a href="#portfolio" onClick={(e) => handleScroll(e, 'portfolio')}>Portfolio</a>
-          <a href="#infocontact" onClick={(e) => handleScroll(e, 'infocontact')}>Info & Contact</a>
+        <div className="py-8 px-6 flex flex-col items-center justify-center space-y-6 text-center text-xs font-medium uppercase tracking-widest text-stone-800">
+          <a href="#portfolio" onClick={(e) => handleScroll(e, 'portfolio')} className="hover:text-stone-900 transition-colors border-b border-stone-900/0 hover:border-stone-900 pb-1">Portfolio</a>
+          <a href="#infocontact" onClick={(e) => handleScroll(e, 'infocontact')} className="hover:text-stone-900 transition-colors border-b border-stone-900/0 hover:border-stone-900 pb-1">Info & Contact</a>
         </div>
       </div>
     </header>

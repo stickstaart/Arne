@@ -366,7 +366,7 @@ export default function PortfolioCarousel() {
       {/* 3. LIGHTBOX MODAL MET DRAG, PINCH-ZOOM EN +, - KNOPPEN */}
       {selectedImage && (
         <div
-          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center overflow-hidden select-none cursor-pointer"
+          className="fixed inset-0 bg-[#F9F7F2]/40 backdrop-blur-md z-50 flex items-center justify-center p-4 overflow-hidden select-none cursor-pointer"
           onClick={(e) => {
             if (e.target === e.currentTarget) {
               setSelectedImage(null)
