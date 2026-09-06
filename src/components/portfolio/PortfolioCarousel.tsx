@@ -363,10 +363,10 @@ export default function PortfolioCarousel() {
         </div>
       </div>
 
-      {/* 3. LIGHTBOX MODAL MET DRAG, PINCH-ZOOM EN +, - KNOPPEN */}
+      {/* 3. LIGHTBOX MODAL MET SUBTIELE KNOPPENBALK & FROSTED BACKGROUND */}
       {selectedImage && (
         <div
-          className="fixed inset-0 bg-[#F9F7F2]/40 backdrop-blur-md z-50 flex items-center justify-center p-4 overflow-hidden select-none cursor-pointer"
+          className="fixed inset-0 bg-[#F9F7F2]/85 backdrop-blur-md z-50 flex items-center justify-center p-4 overflow-hidden select-none cursor-pointer transition-opacity duration-300"
           onClick={(e) => {
             if (e.target === e.currentTarget) {
               setSelectedImage(null)
@@ -382,37 +382,47 @@ export default function PortfolioCarousel() {
           >
             {({ zoomIn, zoomOut, resetTransform }) => (
               <>
-                {/* ACTIEBALK RECHTSBOVEN (+, -, Reset, Sluiten) */}
+                {/* SUBTIELE CONTROLS BALK (Rechtsboven) */}
                 <div
-                  className="absolute top-4 right-4 md:top-6 md:right-6 flex items-center gap-2 md:gap-3 z-50 cursor-default"
+                  className="absolute top-4 right-4 md:top-6 md:right-6 z-50 flex items-center gap-1.5 md:gap-2 bg-stone-900/5 backdrop-blur-md p-1.5 rounded-full border border-stone-900/10 shadow-sm cursor-default"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <button
+                    type="button"
                     onClick={() => zoomIn()}
-                    className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center backdrop-blur-md border border-white/20 text-lg transition-all active:scale-95"
+                    className="w-9 h-9 flex items-center justify-center rounded-full text-stone-800 hover:bg-stone-900/10 transition-all active:scale-95 cursor-pointer font-sans text-base font-medium"
                     aria-label="Inzoomen"
+                    title="Inzoomen"
                   >
                     +
                   </button>
                   <button
+                    type="button"
                     onClick={() => zoomOut()}
-                    className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center backdrop-blur-md border border-white/20 text-lg transition-all active:scale-95"
+                    className="w-9 h-9 flex items-center justify-center rounded-full text-stone-800 hover:bg-stone-900/10 transition-all active:scale-95 cursor-pointer font-sans text-base font-medium"
                     aria-label="Uitzoomen"
+                    title="Uitzoomen"
                   >
                     &minus;
                   </button>
                   <button
+                    type="button"
                     onClick={() => resetTransform()}
-                    className="px-3 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center backdrop-blur-md border border-white/20 text-xs uppercase tracking-wider transition-all active:scale-95"
+                    className="px-3 h-9 flex items-center justify-center rounded-full text-stone-800 hover:bg-stone-900/10 transition-all active:scale-95 cursor-pointer font-sans text-[11px] font-medium tracking-widest uppercase"
                   >
                     Reset
                   </button>
+
+                  <div className="w-[1px] h-5 bg-stone-900/15 mx-0.5" />
+
                   <button
+                    type="button"
                     onClick={() => setSelectedImage(null)}
-                    className="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center text-2xl font-light transition-all active:scale-95 ml-2"
+                    className="w-9 h-9 flex items-center justify-center rounded-full text-stone-900 hover:bg-stone-900/10 transition-all active:scale-95 cursor-pointer font-sans text-lg font-normal"
                     aria-label="Sluiten"
+                    title="Sluiten"
                   >
-                    &times;
+                    ✕
                   </button>
                 </div>
 
@@ -445,7 +455,7 @@ export default function PortfolioCarousel() {
                         width={selectedImage.width || 2400}
                         height={selectedImage.height || 2400}
                         alt={selectedImage.title || "Arne van der Ree Vergroot"}
-                        className="max-w-[90vw] max-h-[80vh] w-auto h-auto object-contain rounded-sm shadow-2xl"
+                        className="max-w-[90vw] max-h-[80vh] w-auto h-auto object-contain rounded-lg shadow-2xl"
                         priority
                       />
                     </div>
