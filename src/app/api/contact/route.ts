@@ -19,7 +19,7 @@ export async function POST(request: Request) {
       // Zolang je onboarding gebruikt, werkt 'to' ALLEEN naar het e-mailadres van de Resend-accounthouder!
       from: 'Doodle Contact <onboarding@resend.dev>',
       // to: ['arne@doodle.nl'],
-      to: ['stickstaart@gmail.com'],
+      to: ['arne@doodle.nl'],
       subject: `Nieuw bericht via website van ${name}`,
       replyTo: email,
       text: `

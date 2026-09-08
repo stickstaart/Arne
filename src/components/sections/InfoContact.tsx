@@ -102,7 +102,7 @@ export default function InfoContact() {
             <p>
               Stuur gerust uw vragen over de mogelijkheden via {' '}
               <span className="hidden lg:inline">nevenstaand</span>
-              <span className="inline lg:hidden">onderstaand</span>f formulier.
+              <span className="inline lg:hidden">onderstaand</span>formulier.
             </p>
           </div>
         </div>
