@@ -17,6 +17,7 @@ export async function POST(request: Request) {
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
+        'User-Agent': 'Mozilla/5.0 (compatible; DoodleWebsite/1.0)',
       },
       body: JSON.stringify({
         access_key: process.env.WEB3FORMS_ACCESS_KEY,
