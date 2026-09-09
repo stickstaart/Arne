@@ -58,7 +58,7 @@ export default function InfoContact() {
     setStatus('loading')
     setErrorMessage('')
 
-    // Als de verborgen honeypot is aangevinkt, stop direct (stille stop voor bots)
+    // Als de verborgen HONEYPOT is aangevinkt, stop direct (stille stop voor bots)
     if (formData.botcheck) {
       setStatus('success')
       setFormData({ name: '', email: '', phone: '', message: '', botcheck: false })
