@@ -8,6 +8,7 @@ export default function InfoContact() {
     email: '',
     phone: '',
     message: '',
+    honeypot: '', // Honeypot toegevoegd
   })
 
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
@@ -22,12 +23,10 @@ export default function InfoContact() {
     if (status === 'success') {
       setIsFadingOut(false)
 
-      // Start fade-out effect na 7 seconden
       fadeTimer = setTimeout(() => {
         setIsFadingOut(true)
       }, 7000)
 
-      // Zet status weer op 'idle' na 8 seconden (wanneer fade-out klaar is)
       resetTimer = setTimeout(() => {
         setStatus('idle')
         setIsFadingOut(false)
@@ -61,10 +60,7 @@ export default function InfoContact() {
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...formData,
-          to: 'arne@doodle.nl',
-        }),
+        body: JSON.stringify(formData), // Geen 'to' meer nodig
       })
 
       if (!res.ok) {
@@ -72,7 +68,7 @@ export default function InfoContact() {
       }
 
       setStatus('success')
-      setFormData({ name: '', email: '', phone: '', message: '' })
+      setFormData({ name: '', email: '', phone: '', message: '', honeypot: '' })
     } catch (err: any) {
       console.error(err)
       setStatus('error')
@@ -120,7 +116,7 @@ export default function InfoContact() {
               }`}
             >
               <p className="text-sm md:text-base leading-relaxed">
-                Bedankt voor uw bericht! We hebben de e-mail goed ontvangen en nemen zo snel mogelijk contact met u op via <strong className="font-semibold">arne@doodle.nl</strong>.
+                Bedankt voor uw bericht! We hebben de e-mail goed ontvangen en nemen zo snel mogelijk contact met u op.
               </p>
               <div className="pt-2">
                 <button
@@ -134,6 +130,17 @@ export default function InfoContact() {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6 font-sans">
+              {/* Verborgen Honeypot-veld tegen spambots */}
+              <input
+                type="text"
+                name="honeypot"
+                value={formData.honeypot}
+                onChange={handleChange}
+                className="hidden"
+                tabIndex={-1}
+                autoComplete="off"
+              />
+
               {/* Naam */}
               <div>
                 <label htmlFor="name" className="block text-xs font-medium uppercase tracking-widest text-stone-600 mb-2">
@@ -153,7 +160,6 @@ export default function InfoContact() {
 
               {/* Grid voor Email en Telefoon */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                {/* Email */}
                 <div>
                   <label htmlFor="email" className="block text-xs font-medium uppercase tracking-widest text-stone-600 mb-2">
                     E-mailadres <span className="text-rose-500">*</span>
@@ -170,7 +176,6 @@ export default function InfoContact() {
                   />
                 </div>
 
-                {/* Telefoonnummer (Optioneel) */}
                 <div>
                   <label htmlFor="phone" className="block text-xs font-medium uppercase tracking-widest text-stone-600 mb-2">
                     Telefoonnummer <span className="text-stone-400 text-[10px] lowercase font-normal">(optioneel)</span>
