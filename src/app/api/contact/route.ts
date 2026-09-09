@@ -1,10 +1,7 @@
 import { NextResponse } from 'next/server'
-import { Resend } from 'resend'
 
 export async function POST(request: Request) {
   try {
-    const resend = new Resend(process.env.RESEND_API_KEY)
-
     const body = await request.json()
     const { name, email, phone, message, honeypot } = body
 
@@ -13,31 +10,38 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true, message: 'Bot detected' })
     }
 
-    // 2. E-mail versturen
-    const data = await resend.emails.send({
-      // LET OP: Pas 'contact@doodle.nl' aan naar je geverifieerde domein zodra het domein gekoppeld is in Resend.
-      // Zolang je onboarding gebruikt, werkt 'to' ALLEEN naar het e-mailadres van de Resend-accounthouder!
-      from: 'Doodle Contact <onboarding@resend.dev>',
-      // to: ['arne@doodle.nl'],
-      to: ['arne@doodle.nl'],
-      subject: `Nieuw bericht via website van ${name}`,
-      replyTo: email,
-      text: `
+    // 2. E-mail versturen via Web3forms API
+    const response = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify({
+        access_key: process.env.WEB3FORMS_ACCESS_KEY,
+        from_name: 'Doodle Contact',
+        subject: `Nieuw bericht via website van ${name}`,
+        replyto: email,
+        // Web3forms gebruikt het 'message' veld als de mail-inhoud
+        message: `
 Naam: ${name}
 E-mailadres: ${email}
 Telefoonnummer: ${phone || 'Niet opgegeven'}
 
 Bericht:
 ${message}
-      `,
+        `,
+      }),
     })
 
-    if (data.error) {
-      console.error('Resend API Error:', data.error)
-      return NextResponse.json({ error: data.error.message }, { status: 400 })
+    const result = await response.json()
+
+    if (!result.success) {
+      console.error('Web3forms API Error:', result)
+      return NextResponse.json({ error: result.message }, { status: 400 })
     }
 
-    return NextResponse.json({ success: true, data })
+    return NextResponse.json({ success: true, data: result })
   } catch (error: any) {
     console.error('Server Catch Error:', error)
     return NextResponse.json(
