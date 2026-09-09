@@ -58,6 +58,13 @@ export default function InfoContact() {
     setStatus('loading')
     setErrorMessage('')
 
+    // Als de verborgen honeypot is aangevinkt, stop direct (stille stop voor bots)
+    if (formData.botcheck) {
+      setStatus('success')
+      setFormData({ name: '', email: '', phone: '', message: '', botcheck: false })
+      return
+    }
+
     try {
       const response = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
@@ -73,7 +80,6 @@ export default function InfoContact() {
           message: formData.message,
           from_name: 'Doodle.nl Contact',
           subject: `Nieuw bericht via website van ${formData.name}`,
-          botcheck: formData.botcheck,
         }),
       })
 
