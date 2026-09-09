@@ -8,14 +8,13 @@ export default function InfoContact() {
     email: '',
     phone: '',
     message: '',
-    honeypot: '', // Honeypot toegevoegd
+    botcheck: false, // Honeypot veld
   })
 
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState('')
   const [isFadingOut, setIsFadingOut] = useState(false)
 
-  // Automatische timer voor het uitfaden van de succesmelding
   useEffect(() => {
     let fadeTimer: NodeJS.Timeout
     let resetTimer: NodeJS.Timeout
@@ -45,9 +44,12 @@ export default function InfoContact() {
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const target = e.target
+    const value = target.type === 'checkbox' ? (target as HTMLInputElement).checked : target.value
+
     setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [target.name]: value,
     }))
   }
 
@@ -57,20 +59,34 @@ export default function InfoContact() {
     setErrorMessage('')
 
     try {
-      const res = await fetch('/api/contact', {
+      const response = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData), // Geen 'to' meer nodig
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          access_key: process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY,
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone || 'Niet opgegeven',
+          message: formData.message,
+          from_name: 'Doodle.nl Contact',
+          subject: `Nieuw bericht via website van ${formData.name}`,
+          botcheck: formData.botcheck,
+        }),
       })
 
-      if (!res.ok) {
-        throw new Error('Er is iets misgegaan bij het verzenden van het formulier.')
-      }
+      const result = await response.json()
 
-      setStatus('success')
-      setFormData({ name: '', email: '', phone: '', message: '', honeypot: '' })
+      if (result.success) {
+        setStatus('success')
+        setFormData({ name: '', email: '', phone: '', message: '', botcheck: false })
+      } else {
+        throw new Error(result.message || 'Er is iets misgegaan bij het verzenden.')
+      }
     } catch (err: any) {
-      console.error(err)
+      console.error('Web3forms Error:', err)
       setStatus('error')
       setErrorMessage(err.message || 'Verzenden mislukt. Probeer het later opnieuw.')
     }
@@ -80,7 +96,7 @@ export default function InfoContact() {
     <section id="infocontact" className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
 
-        {/* LINKERKOLOM: Logo Doodle & Infotekst */}
+        {/* LINKERKOLOM */}
         <div className="lg:col-span-5 space-y-6">
           <div className="flex flex-col border-b border-stone-200/80 pb-4 inline-block">
             <h2 className="text-2xl font-light font-sans uppercase tracking-[0.3em] text-stone-900 leading-none">
@@ -103,7 +119,7 @@ export default function InfoContact() {
           </div>
         </div>
 
-        {/* RECHTERKOLOM: Contactformulier */}
+        {/* RECHTERKOLOM */}
         <div className="lg:col-span-7 bg-[#F9F7F2]/60 border border-stone-200/80 rounded-2xl p-6 md:p-10 shadow-sm">
           <h3 className="text-xl font-sans uppercase text-stone-900 mb-8 border-b border-stone-200 pb-3">
             Bericht sturen
@@ -116,7 +132,7 @@ export default function InfoContact() {
               }`}
             >
               <p className="text-sm md:text-base leading-relaxed">
-                Bedankt voor uw bericht! We hebben de e-mail goed ontvangen en nemen zo snel mogelijk contact met u op.
+                Bedankt voor uw bericht! We hebben de e-mail goed ontvangen en nemen zo snel mogelijk contact met u op via <strong className="font-semibold">arne@doodle.nl</strong>.
               </p>
               <div className="pt-2">
                 <button
@@ -130,15 +146,14 @@ export default function InfoContact() {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6 font-sans">
-              {/* Verborgen Honeypot-veld tegen spambots */}
+              {/* Honeypot Veld */}
               <input
-                type="text"
-                name="honeypot"
-                value={formData.honeypot}
-                onChange={handleChange}
+                type="checkbox"
+                name="botcheck"
                 className="hidden"
-                tabIndex={-1}
-                autoComplete="off"
+                style={{ display: 'none' }}
+                checked={formData.botcheck}
+                onChange={handleChange}
               />
 
               {/* Naam */}
